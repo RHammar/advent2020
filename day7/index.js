@@ -13,7 +13,7 @@ rows.forEach(row => {
   const innerRows = row.slice(c + bagsContaining.length).replace(/\.$/, '').trim().split(', ')
   const innerBags = []
   innerRows.forEach(bag => {
-    const amount = parseInt(bag)
+    const amount = parseInt(bag) || 0
     const colour = bag.replace(/^\d+\s*/, '').replace(/bags?/, '').trim()
     innerBags.push({
       colour,
@@ -47,4 +47,18 @@ function canContainShinyGoldBag (colour) {
   }
 })
 
+function containsWithin (colour) {
+  const innerbags = bags.get(colour)
+  if (!innerbags) {
+    return 0
+  }
+  let bagsSoFar = 1
+  for (const bag of innerbags) {
+    bagsSoFar += (bag.amount * containsWithin(bag.colour))
+  }
+  return bagsSoFar
+}
+
 console.log(numberOfBags)
+const totalBags = containsWithin('shiny gold')
+console.log(totalBags - 1)
